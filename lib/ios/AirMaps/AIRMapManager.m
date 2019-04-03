@@ -27,8 +27,7 @@
 #import "AIRMapSnapshot.h"
 #import "RCTConvert+AirMap.h"
 #import "AIRMapOverlay.h"
-#import "AIRWeakTimerReference.h"
-#import "AIRWeakMapReference.h"
+
 #import <MapKit/MapKit.h>
 
 static NSString *const RCTMapViewKey = @"MapView";
@@ -496,24 +495,6 @@ RCT_EXPORT_METHOD(pointForCoordinate:(nonnull NSNumber *)reactTag
     }];
 }
 
-RCT_EXPORT_METHOD(getMarkersFrames:(nonnull NSNumber *)reactTag
-                  onlyVisible:(BOOL)onlyVisible
-                  resolver: (RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-{
-    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-        id view = viewRegistry[reactTag];
-        AIRMap *mapView = (AIRMap *)view;
-        if (![view isKindOfClass:[AIRMap class]]) {
-            reject(@"Invalid argument", [NSString stringWithFormat:@"Invalid view returned from registry, expecting AIRMap, got: %@", view], NULL);
-        } else {
-            resolve([mapView getMarkersFramesWithOnlyVisible:onlyVisible]);
-        }
-    }];
-}
-
-
-
 RCT_EXPORT_METHOD(coordinateForPoint:(nonnull NSNumber *)reactTag
                   point:(NSDictionary *)point
                   resolver: (RCTPromiseResolveBlock)resolve
@@ -921,12 +902,10 @@ static int kDragCenterContext;
 {
     [self _regionChanged:mapView];
 
-    AIRWeakTimerReference *weakTarget = [[AIRWeakTimerReference alloc] initWithTarget:self andSelector:@selector(_onTick:)];
-    
     mapView.regionChangeObserveTimer = [NSTimer timerWithTimeInterval:AIRMapRegionChangeObserveInterval
-                                                               target:weakTarget
-                                                             selector:@selector(timerDidFire:)
-                                                             userInfo:@{ RCTMapViewKey: [[AIRWeakMapReference alloc] initWithMapView: mapView] }
+                                                               target:self
+                                                             selector:@selector(_onTick:)
+                                                             userInfo:@{ RCTMapViewKey: mapView }
                                                               repeats:YES];
 
     [[NSRunLoop mainRunLoop] addTimer:mapView.regionChangeObserveTimer forMode:NSRunLoopCommonModes];
@@ -976,8 +955,7 @@ static int kDragCenterContext;
 
 - (void)_onTick:(NSTimer *)timer
 {
-    AIRWeakMapReference *weakRef = timer.userInfo[RCTMapViewKey];
-    [self _regionChanged:weakRef.mapView];
+    [self _regionChanged:timer.userInfo[RCTMapViewKey]];
 }
 
 - (void)_regionChanged:(AIRMap *)mapView

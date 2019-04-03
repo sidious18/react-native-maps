@@ -7,17 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import "AIRWeakMapReference.h"
+#import <React/RCTViewManager.h>
 
-@implementation AIRWeakMapReference
-
-
-- (instancetype)initWithMapView:(AIRMap *)mapView {
-    self = [super init];
-    if (self) {
-        _mapView = mapView;
-    }
-    return self;
-}
+@interface AIRMapMarkerManager : RCTViewManager
 
 @end

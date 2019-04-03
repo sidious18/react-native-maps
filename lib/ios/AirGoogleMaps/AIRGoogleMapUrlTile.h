@@ -15,7 +15,6 @@
 @property (nonatomic, assign) int zIndex;
 @property NSInteger *maximumZ;
 @property NSInteger *minimumZ;
-@property BOOL flipY;
 
 @end
 

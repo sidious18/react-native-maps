@@ -13,9 +13,6 @@
 #import <React/RCTComponent.h>
 #import "SMCalloutView.h"
 #import "RCTConvert+AirMap.h"
-#import "AIRMapCalloutSubview.h"
-
-@class AIRMapMarker;
 
 extern const CLLocationDegrees AIRMapDefaultSpan;
 extern const NSTimeInterval AIRMapRegionChangeObserveInterval;
@@ -69,8 +66,5 @@ extern const NSInteger AIRMapMaxZoomLevel;
 - (void)beginLoading;
 - (void)finishLoading;
 - (NSArray *)getMapBoundaries;
-
-- (AIRMapMarker*) markerAtPoint:(CGPoint)point;
-- (NSDictionary*) getMarkersFramesWithOnlyVisible:(BOOL)onlyVisible;
 
 @end

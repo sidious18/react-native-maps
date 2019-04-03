@@ -149,52 +149,13 @@ CGRect unionRect(CGRect a, CGRect b) {
   return nil;
 }
 
-- (void)didTapInfoWindowOfMarker:(AIRGMSMarker *)marker point:(CGPoint)point frame:(CGRect)frame {
+- (void)didTapInfoWindowOfMarker:(AIRGMSMarker *)marker {
   if (self.calloutView && self.calloutView.onPress) {
-      //todo: why not 'callout-press' ?
-    id event = @{
-               @"action": @"marker-overlay-press",
-               @"id": self.identifier ?: @"unknown",
-               @"point": @{
-                   @"x": @(point.x),
-                   @"y": @(point.y),
-                   },
-               @"frame": @{
-                   @"x": @(frame.origin.x),
-                   @"y": @(frame.origin.y),
-                   @"width": @(frame.size.width),
-                   @"height": @(frame.size.height),
-                   }
-               };
+    id event = @{@"action": @"marker-overlay-press",
+                 @"id": self.identifier ?: @"unknown",
+                 };
     self.calloutView.onPress(event);
   }
-}
-
-- (void)didTapInfoWindowOfMarker:(AIRGMSMarker *)marker {
-    [self didTapInfoWindowOfMarker:marker point:CGPointMake(-1, -1) frame:CGRectZero];
-}
-
-- (void)didTapInfoWindowOfMarker:(AIRGMSMarker *)marker subview:(AIRGoogleMapCalloutSubview*)subview point:(CGPoint)point frame:(CGRect)frame {
-    if (subview && subview.onPress) {
-        //todo: why not 'callout-inside-press' ?
-        id event = @{
-                   @"action": @"marker-inside-overlay-press",
-                   @"id": self.identifier ?: @"unknown",
-                   @"point": @{
-                       @"x": @(point.x),
-                       @"y": @(point.y),
-                       },
-                   @"frame": @{
-                       @"x": @(frame.origin.x),
-                       @"y": @(frame.origin.y),
-                       @"width": @(frame.size.width),
-                       @"height": @(frame.size.height),
-                       }
-                   };
-        subview.onPress(event);
-    } else {
-        [self didTapInfoWindowOfMarker:marker point:point frame:frame];
-    }
 }
 
 - (void)didBeginDraggingMarker:(AIRGMSMarker *)marker {
@@ -264,7 +225,7 @@ CGRect unionRect(CGRect a, CGRect b) {
   }
 
   if (!_iconImageView) {
-    // prevent glitch with marker (cf. https://github.com/react-native-community/react-native-maps/issues/738)
+    // prevent glitch with marker (cf. https://github.com/airbnb/react-native-maps/issues/738)
     UIImageView *empyImageView = [[UIImageView alloc] init];
     _iconImageView = empyImageView;
     [self iconViewInsertSubview:_iconImageView atIndex:0];

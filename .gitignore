@@ -21,6 +21,8 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
+Pods/
+AirMapsExplorer.xcworkspace/
 
 # Android/IJ
 #
@@ -33,7 +35,8 @@ local.properties
 #
 node_modules/
 npm-debug.log
-Pods/
-AirMapsExplorer.xcworkspace/
-lib/android/src/main/gen
-example/android/app/src/main/gen
+yarn-error.log
+
+# Rubygem bundles
+#
+bundles/
